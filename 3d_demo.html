@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>3D Blueprint Demo</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #1a1a1a; }
+        #info { position: absolute; top: 10px; width: 100%; text-align: center; color: white; font-family: sans-serif; pointer-events: none;}
+    </style>
+    <!-- Three.js CDN import -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+    <div id="info">
+        <h3>Fire Evacuation Simulator - 3D Blueprint Demo</h3>
+        <p>Mouse drag se rotate karein, scroll se zoom karein</p>
+    </div>
+
+    <script>
+        // STEP 1: Blueprint Data (JSON format)
+        // Ye data hum kisi image se AI ke through nikal sakte hain ya manually define kar sakte hain
+        const blueprintData = {
+            walls: [
+                { x: 0, z: -5, width: 10, depth: 0.5 }, // Top wall
+                { x: 0, z: 5, width: 10, depth: 0.5 },  // Bottom wall
+                { x: -5, z: 0, width: 0.5, depth: 10 }, // Left wall
+                { x: 5, z: 0, width: 0.5, depth: 10 },  // Right wall
+                { x: 0, z: 0, width: 4, depth: 0.5 },   // Inner partition (bich ki deewar)
+            ]
+        };
+
+        // STEP 2: Three.js Setup (Scene, Camera, Renderer)
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        
+        // Lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+        directionalLight.position.set(5, 15, 5);
+        scene.add(directionalLight);
+
+        // Floor (Zameen)
+        const floorGeometry = new THREE.PlaneGeometry(10, 10);
+        const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x555555, side: THREE.DoubleSide });
+        const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+        floor.rotation.x = Math.PI / 2; // Flat karne ke liye
+        scene.add(floor);
+
+        // STEP 3: Blueprint Data ko 3D Walls me convert karna
+        const wallHeight = 2.5; 
+        const wallMaterial = new THREE.MeshStandardMaterial({ color: 0xdddddd });
+
+        blueprintData.walls.forEach(wall => {
+            const geometry = new THREE.BoxGeometry(wall.width, wallHeight, wall.depth);
+            const wallMesh = new THREE.Mesh(geometry, wallMaterial);
+            
+            // Position set karna (Y axis height ke liye hai)
+            wallMesh.position.set(wall.x, wallHeight / 2, wall.z);
+            scene.add(wallMesh);
+        });
+
+        // Camera ko adjust karna
+        camera.position.set(0, 10, 12);
+        controls.update();
+
+        // Render Loop (Animation)
+        function animate() {
+            requestAnimationFrame(animate);
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Responsive window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

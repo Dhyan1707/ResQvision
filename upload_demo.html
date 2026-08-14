@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Blueprint Upload & 3D Render Demo</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; padding: 20px; background-color: #f4f4f9; display: flex; flex-direction: column; height: 100vh; box-sizing: border-box; }
+        .panel { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+        input[type="text"], input[type="file"] { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { background: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        #render-container { flex: 1; border-radius: 8px; overflow: hidden; position: relative; background: #111; min-height: 400px; display: none; }
+        #loading { display: none; color: #007bff; font-weight: bold; margin-top: 10px; }
+        #error { display: none; color: red; font-weight: bold; margin-top: 10px; }
+    </style>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+
+    <div class="panel">
+        <h2>Upload Blueprint Image (Gemini Vision AI)</h2>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label>Auth Token (Bearer Token):</label>
+                <input type="text" id="token" placeholder="Paste your JWT token here (required)" required>
+            </div>
+            <div class="form-group">
+                <label>Select Blueprint Image:</label>
+                <input type="file" id="imageFile" accept="image/png, image/jpeg" required>
+            </div>
+            <button type="submit">Upload & Generate 3D Map</button>
+            <div id="loading">Uploading and processing with AI... This may take a few seconds...</div>
+            <div id="error"></div>
+        </form>
+    </div>
+
+    <div id="render-container"></div>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('imageFile').files[0];
+            const token = document.getElementById('token').value;
+            
+            if (!file || !token) return;
+
+            const formData = new FormData();
+            formData.append('blueprint_image', file);
+            formData.append('title', 'Test Uploaded Blueprint');
+            formData.append('building_type', 'Office');
+
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('error').style.display = 'none';
+            document.getElementById('render-container').style.display = 'none';
+
+            try {
+                // Adjust port if your backend runs on a different port (default 5000)
+                const response = await fetch('http://localhost:5000/api/blueprints/upload', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const result = await response.json();
+                document.getElementById('loading').style.display = 'none';
+
+                if (response.ok && result.success) {
+                    // Start 3D Rendering with the returned JSON
+                    init3DRender(result.data.blueprint_json);
+                } else {
+                    document.getElementById('error').textContent = result.message || 'Error occurred';
+                    document.getElementById('error').style.display = 'block';
+                }
+            } catch (err) {
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').textContent = err.message;
+                document.getElementById('error').style.display = 'block';
+            }
+        });
+
+        // Basic Three.js setup to render rooms/walls based on JSON
+        function init3DRender(blueprint) {
+            const container = document.getElementById('render-container');
+            container.style.display = 'block';
+            container.innerHTML = ''; // Clear previous
+
+            const scene = new THREE.Scene();
+            // Match container size
+            const camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            const controls = new THREE.OrbitControls(camera, renderer.domElement);
+            
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+            directionalLight.position.set(50, 100, 50);
+            scene.add(directionalLight);
+
+            // Floor
+            const w = blueprint.dimensions?.width || 100;
+            const h = blueprint.dimensions?.height || 100;
+            const floorGeometry = new THREE.PlaneGeometry(w, h);
+            const floorMaterial = new THREE.MeshStandardMaterial({ color: 0x444444, side: THREE.DoubleSide });
+            const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+            floor.rotation.x = Math.PI / 2;
+            scene.add(floor);
+
+            // Rooms (Rendered as semi-transparent blocks or walls)
+            const wallHeight = 5;
+            
+            blueprint.floors?.forEach(floorData => {
+                floorData.rooms?.forEach(room => {
+                    const roomGeo = new THREE.BoxGeometry(room.width, wallHeight, room.height);
+                    const roomMat = new THREE.MeshStandardMaterial({ 
+                        color: Math.random() * 0xffffff, 
+                        transparent: true, 
+                        opacity: 0.7 
+                    });
+                    const roomMesh = new THREE.Mesh(roomGeo, roomMat);
+                    
+                    // JSON origin might be top-left, center it based on dimensions
+                    // For simplicity, just place them directly using their x, y as center
+                    roomMesh.position.set(room.x - (w/2), wallHeight / 2, room.y - (h/2));
+                    scene.add(roomMesh);
+                });
+            });
+
+            // Set camera to view the whole map
+            camera.position.set(0, Math.max(w, h), Math.max(w, h) * 0.8);
+            camera.lookAt(0, 0, 0);
+            controls.update();
+
+            function animate() {
+                requestAnimationFrame(animate);
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+    </script>
+</body>
+</html>
