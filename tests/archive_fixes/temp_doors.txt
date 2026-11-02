@@ -1,0 +1,30 @@
+        ],
+        doors: [
+          // NORTH LEFT WING (Labs)
+          { id: "F5_D_LAB2", wallId: "F5_CORR_N_LW", x: -47.5, z: -5, width: 3 },
+          { id: "F5_D_LAB1", wallId: "F5_CORR_N_LW", x: -75, z: -5, width: 3 },
+          { id: "F5_D_FAC_ASSO", wallId: "F5_NW_H2", x: -47.5, z: -18, width: 2 },
+          { id: "F5_D_LAB6", wallId: "F5_NW_H1", x: -75, z: -18, width: 2 },
+          // SOUTH LEFT WING (Labs)
+          { id: "F5_D_LAB5", wallId: "F5_CORR_S_LW", x: -47.5, z: 5, width: 3 },
+          { id: "F5_D_FAC_ASST", wallId: "F5_CORR_S_LW", x: -75, z: 5, width: 3 },
+          { id: "F5_D_LAB4", wallId: "F5_SW_H2", x: -47.5, z: 18, width: 2 },
+          { id: "F5_D_LAB3", wallId: "F5_SW_H1", x: -75, z: 18, width: 2 },
+          // CENTER CORE NORTH
+          { id: "F5_D_AHU_N", wallId: "F5_CORR_N_NC", x: -10.5, z: -5, width: 2 },
+          { id: "F5_D_BOYS", wallId: "F5_CORR_N_NC", x: -3, z: -5, width: 3 },
+          { id: "F5_D_GIRLS", wallId: "F5_CORR_N_NC", x: 2.5, z: -5, width: 3 },
+          { id: "F5_D_HANDICAP", wallId: "F5_CORR_N_NC", x: 7.5, z: -5, width: 2 },
+          // CENTER CORE SOUTH
+          { id: "F5_D_SEMINAR", wallId: "F5_CORR_S_SC", x: 37, z: 5, width: 6 },
+          // EAST WING NORTH
+          { id: "F5_D_FACULTY", wallId: "F5_CORR_N_RW", x: 47.5, z: -5, width: 3 },
+          { id: "F5_D_BAGGAGE", wallId: "F5_CORR_N_RW", x: 72.5, z: -5, width: 3 },
+          { id: "F5_D_PRI_READ", wallId: "F5_CORR_N_RW", x: 95, z: -5, width: 4 },
+          // EAST WING SOUTH
+          { id: "F5_D_AHU_S", wallId: "F5_CORR_S_RW", x: 72.5, z: 5, width: 2 },
+          { id: "F5_D_LIBRARIAN", wallId: "F5_SE_H1", x: 72.5, z: 18, width: 2 },
+          { id: "F5_D_BOOK_STORAGE", wallId: "F5_CORR_S_RW", x: 87.5, z: 5, width: 3 },
+          { id: "F5_D_SEC_READ", wallId: "F5_CORR_S_RW", x: 102.5, z: 5, width: 4 }
+        ],
+        windows: [],

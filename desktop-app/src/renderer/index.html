@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Fire Evacuation System</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <!-- ================= HEADER ================= -->
+
+    <header class="top-header">
+
+        <div class="system-title">
+            <h1>AI FIRE EVACUATION SYSTEM</h1>
+            <p>Desktop Control Room</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button id="nav2DTab" class="nav-tab active">
+                <span class="tab-icon">📐</span>
+                <span class="tab-text">2D Blueprint View</span>
+            </button>
+            <button id="nav3DTab" class="nav-tab">
+                <span class="tab-icon">🏢</span>
+                <span class="tab-text">3D Simulation</span>
+            </button>
+            <button id="navVRTab" class="nav-tab">
+                <span class="tab-icon">🥽</span>
+                <span class="tab-text">VR Walkthrough</span>
+            </button>
+            <button id="navARTab" class="nav-tab">
+                <span class="tab-icon">📱</span>
+                <span class="tab-text">AR Tactical Mode</span>
+            </button>
+            <button id="navHistoryTab" class="nav-tab">
+                <span class="tab-icon">📜</span>
+                <span class="tab-text">Drill History</span>
+            </button>
+        </div>
+
+        <div class="system-info">
+
+            <div class="connection-status">
+                <span class="status-dot"></span>
+                <span id="connectionStatus">SYSTEM ONLINE</span>
+            </div>
+
+            <div class="last-update">
+                Last Update:
+                <span id="lastUpdate">--:--:--</span>
+            </div>
+
+            <div class="alert-count">
+                Active Alerts:
+                <span id="activeAlertCount">0</span>
+            </div>
+
+        </div>
+
+        <div class="user-auth-section" id="authSection">
+            <button id="userAuthBtn" class="auth-btn" type="button">
+                <span class="auth-icon">👤</span>
+                <span id="authStatusText">Sign In / Register</span>
+            </button>
+            <button id="userLogoutBtn" class="auth-logout-btn" style="display: none;" title="Sign out" type="button">
+                <span>🚪</span> Logout
+            </button>
+        </div>
+
+    </header>
+
+
+    <!-- ================= MAIN DASHBOARD ================= -->
+
+    <main id="mainDashboard" class="dashboard">
+
+
+        <!-- ===== ALERTS PANEL ===== -->
+
+        <section class="panel alerts-panel">
+
+            <div class="panel-header">
+
+                <h2>🚨 LIVE ALERTS</h2>
+
+                <span class="panel-status">
+                    REAL-TIME
+                </span>
+
+            </div>
+
+            <div
+                id="alertsContainer"
+                class="alerts-container"
+            >
+
+                <div class="empty-state">
+
+                    <p>
+                        No active alerts
+                    </p>
+
+                    <span>
+                        Waiting for hazard information...
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ===== MAP AREA ===== -->
+
+        <section class="panel map-panel">
+
+            <div class="panel-header">
+
+                <h2>
+                    🗺 EVACUATION MAP
+                </h2>
+
+
+
+            </div>
+
+
+            <!-- =====================================
+                 BLUEPRINT UPLOAD
+                 ===================================== -->
+
+            <div class="blueprint-upload">
+
+                <div class="upload-title">
+
+                    <strong>
+                        📐 BUILDING BLUEPRINT
+                    </strong>
+
+                    <span>
+                        Upload building map
+                    </span>
+
+                </div>
+
+
+                <input
+                    type="file"
+                    id="blueprintInput"
+                    accept=".png,.jpg,.jpeg"
+                    hidden
+                />
+
+
+                <button
+                    id="uploadBlueprintButton"
+                    type="button"
+                    class="action-btn upload-btn"
+                >
+                    📁 Upload Blueprint
+                </button>
+                
+                <button
+                    id="viewCompleteBuildingButton"
+                    type="button"
+                    class="action-btn view-btn"
+                >
+                    🏢 View Complete Building
+                </button>
+
+
+                <span
+                    id="selectedFileName"
+                    class="selected-file-name"
+                >
+                    No blueprint selected
+                </span>
+
+            </div>
+
+            <!-- =====================================
+                 2D BLUEPRINT PAGE VIEW
+                 ===================================== -->
+            <div id="page2DView" style="display: block;">
+                <div
+                    id="mapContainer"
+                    class="map-container"
+                >
+                    <div class="map-placeholder">
+                        <div class="map-icon">🗺</div>
+                        <h3>BUILDING MAP</h3>
+                        <p>Upload a blueprint to begin</p>
+                        <p class="map-info">Fire location • Exits • Evacuation route</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- ===== ROUTE PANEL ===== -->
+
+        <section class="panel route-panel">
+
+            <div class="panel-header">
+
+                <h2>
+                    🛣 SAFE EVACUATION ROUTE
+                </h2>
+
+            </div>
+
+
+            <div
+                id="routeContainer"
+                class="route-container"
+            >
+
+                <div class="route-status">
+
+                    <span class="route-indicator"></span>
+
+                    <div>
+
+                        <strong>
+                            Route Status
+                        </strong>
+
+                        <p id="routeStatus">
+                            Waiting for route information
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="route-details">
+
+                    <div class="route-item">
+
+                        <span>
+                            Current Location
+                        </span>
+
+                        <strong id="currentLocation">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="route-item">
+
+                        <span>
+                            Nearest Safe Exit
+                        </span>
+
+                        <strong id="nearestExit">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="route-item">
+
+                        <span>
+                            Distance
+                        </span>
+
+                        <strong id="routeDistance">
+                            --
+                        </strong>
+
+                    </div>
+
+
+                    <div class="route-item">
+
+                        <span>
+                            Estimated Time
+                        </span>
+
+                        <strong id="routeTime">
+                            --
+                        </strong>
+
+                    </div>
+
+                    <!-- VICTIM HEALTH & VITALITY STATUS -->
+                    <div class="route-item route-health-item" style="grid-column: 1 / -1; margin-top: 6px;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <span style="font-size: 0.82rem; color: #94a3b8; font-weight: 600;">❤️ Victim Health & Vitals</span>
+                            <strong id="victimHealthVal" style="font-size: 0.85rem; color: #10b981;">100% (Healthy)</strong>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 4px; overflow: hidden;">
+                            <div id="victimHealthBar" style="width: 100%; height: 100%; background: #10b981; transition: width 0.3s ease, background-color 0.3s ease;"></div>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div
+                    class="route-message"
+                    id="routeMessage"
+                >
+
+                    No evacuation route
+                    available yet.
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- ================= 3D FULLSCREEN SIMULATION PAGE ================= -->
+    <div id="page3DView" class="page-3d-view" style="display: none;">
+        <div class="simulation-toolbar">
+            <div class="simulation-header" title="Shri Bhagubhai Mafatlal Polytechnic">
+                <h2>🏢 3D SIMULATION</h2>
+                <span class="simulation-subtitle">SBMP College</span>
+            </div>
+
+            <div class="simulation-controls">
+                <div class="m4-controls" style="display: none;">
+                    <select id="m4StartNode"></select>
+                    <span class="m4-arrow">→</span>
+                    <select id="m4EndNode"></select>
+                    <button id="btnCalculateM4" class="btn-calculate">Calculate Route</button>
+                </div>
+
+                <div class="sim-floor-select-wrap">
+                    <label for="threeDFloorSelect"><span class="btn-icon">🏢</span> Floor:</label>
+                    <select id="threeDFloorSelect" class="sim-select" title="Choose specific floor to view separately or view full building">
+                        <option value="all">🌐 All Floors (Full Building)</option>
+                        <option value="0">Ground Floor (Level 0)</option>
+                        <option value="1">1st Floor (Level 1)</option>
+                        <option value="2">2nd Floor (Level 2)</option>
+                        <option value="3">3rd Floor (Level 3)</option>
+                        <option value="4">4th Floor (Level 4)</option>
+                        <option value="5">5th Floor (Level 5)</option>
+                        <option value="6">6th Floor (Level 6)</option>
+                        <option value="7">7th Floor (Level 7)</option>
+                    </select>
+                </div>
+                
+                <button id="btnFocusBuilding" class="sim-btn btn-focus" title="Frame view in viewport">
+                    <span class="btn-icon">🎯</span> Focus View
+                </button>
+                <button id="btnIgniteFire" class="sim-btn btn-ignite">
+                    <span class="btn-icon">🔥</span> Ignite Fire
+                </button>
+                <button id="btnSpawnVictim" class="sim-btn btn-spawn">
+                    <span class="btn-icon">👤</span> Spawn Victim
+                </button>
+                <button id="btnRunEvacuation" class="sim-btn btn-evacuate">
+                    <span class="btn-icon">🚀</span> Start Evacuation
+                </button>
+                <button id="btnAlarmToggle" class="sim-btn btn-alarm" title="Toggle Fire Evacuation Alarm Audio & Siren">
+                    <span class="btn-icon">🚨</span> Alarm: <span id="alarmToggleState">ON</span>
+                </button>
+                <button id="btnResetSimulation" class="sim-btn btn-reset" title="Extinguish all fires and reset simulation">
+                    <span class="btn-icon">🔄</span> Reset Fire & Victim
+                </button>
+                <div class="sim-floor-select-wrap sim-pace-select-wrap">
+                    <label for="simSpeedSelect" title="Evacuation movement pace"><span class="btn-icon">⏱</span> Pace:</label>
+                    <select id="simSpeedSelect" class="sim-select" title="Evacuation movement pace">
+                        <option value="1.0" selected>🚶 1x (Realistic)</option>
+                        <option value="1.5">🏃 1.5x (Brisk Run)</option>
+                        <option value="2.5">⚡ 2.5x (Fast Sim)</option>
+                        <option value="5.0">⏩ 5x (Instant)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="viewport-wrapper">
+            <!-- Emergency Fire Alarm Interactive Strobe Banner -->
+            <div id="alarmBanner" class="alarm-banner" style="display: none;">
+                <div class="alarm-banner-content">
+                    <span class="alarm-beacon">🚨</span>
+                    <div class="alarm-text-wrap">
+                        <strong class="alarm-title">EMERGENCY FIRE ALARM ACTIVE</strong>
+                        <span id="alarmSubtitle" class="alarm-subtitle">Fire started! Start evacuating immediately!</span>
+                    </div>
+                </div>
+                <div class="alarm-actions">
+                    <button id="btnAlarmEvacuateNow" class="alarm-action-btn btn-evacuate-now" title="Begin Emergency Evacuation Immediately">
+                        🚀 Evacuate Now
+                    </button>
+                    <button id="btnSilenceAlarm" class="alarm-action-btn btn-silence" title="Silence Alarm Sound & Siren">
+                        🔕 Silence
+                    </button>
+                </div>
+            </div>
+
+            <div id="threeDContainer" class="three-d-container"></div>
+            
+            <!-- Quick Floor Elevator Stack Widget -->
+            <div class="viewport-floor-stack" id="viewportFloorStack" title="Quick Floor Selector">
+                <button class="stack-btn active" data-floor="all" title="View Full 8-Floor Building">ALL</button>
+                <button class="stack-btn" data-floor="7" title="View 7th Floor">7F</button>
+                <button class="stack-btn" data-floor="6" title="View 6th Floor">6F</button>
+                <button class="stack-btn" data-floor="5" title="View 5th Floor">5F</button>
+                <button class="stack-btn" data-floor="4" title="View 4th Floor">4F</button>
+                <button class="stack-btn" data-floor="3" title="View 3rd Floor">3F</button>
+                <button class="stack-btn" data-floor="2" title="View 2nd Floor">2F</button>
+                <button class="stack-btn" data-floor="1" title="View 1st Floor">1F</button>
+                <button class="stack-btn" data-floor="0" title="View Ground Floor">GF</button>
+            </div>
+
+            <!-- Multi-Floor Stair Descent Live Telemetry Ribbon -->
+            <div id="stairDescentRibbon" class="stair-descent-ribbon" style="display: none;">
+                <div class="ribbon-header">
+                    <div class="ribbon-title-box">
+                        <span class="ribbon-icon">🪜</span>
+                        <strong class="ribbon-title">STAIRWAY EVACUATION TRACKER</strong>
+                    </div>
+                    <span id="ribbonLiveBadge" class="ribbon-live-badge badge-active">DESCENDING</span>
+                </div>
+                <div id="stairFloorsTrack" class="stair-floors-track"></div>
+                <div class="ribbon-footer">
+                    <span id="ribbonAltitude" class="ribbon-alt">Altitude: --</span>
+                    <span class="ribbon-sep">•</span>
+                    <span id="ribbonStatus" class="ribbon-status">Awaiting stairwell entry...</span>
+                </div>
+            </div>
+
+            <div class="viewport-overlay">
+                <div class="overlay-indicator">
+                    <span class="live-dot"></span> <span id="threeDViewBadge">LIVE SIMULATION • ALL FLOORS</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= VR FULLSCREEN IMMERSIVE PAGE ================= -->
+    <div id="pageVRView" class="page-vr-view" style="display: none;">
+        <div class="simulation-toolbar vr-toolbar">
+            <div class="simulation-header">
+                <h2>🥽 VR IMMERSIVE EVACUATION SIMULATOR</h2>
+                <span class="simulation-subtitle">First-Person 6DoF & Stereoscopic Headset Mode</span>
+            </div>
+
+            <div class="simulation-controls vr-controls">
+                <div class="vr-floor-select-wrap">
+                    <label for="vrFloorSelect">Floor:</label>
+                    <select id="vrFloorSelect" class="sim-select">
+                        <option value="0">Ground Floor</option>
+                        <option value="1">First Floor</option>
+                        <option value="2">Second Floor</option>
+                        <option value="3">Third Floor</option>
+                        <option value="4">Fourth Floor</option>
+                        <option value="5">Fifth Floor</option>
+                        <option value="6">Sixth Floor</option>
+                        <option value="7">Seventh Floor</option>
+                    </select>
+                    <button id="btnVRToolbarStairUp" class="sim-btn btn-stair-tool" title="Ascend to upper floor via stairs (E / ▲)">
+                        <span>▲</span> Up
+                    </button>
+                    <button id="btnVRToolbarStairDown" class="sim-btn btn-stair-tool" title="Descend to lower floor via stairs (Q / ▼)">
+                        <span>▼</span> Down
+                    </button>
+                </div>
+                
+                <button id="btnVRIgniteFire" class="sim-btn btn-ignite" title="Ignite fire on this floor">
+                    <span class="btn-icon">🔥</span> Ignite Fire
+                </button>
+                <button id="btnVRSpawnVictim" class="sim-btn btn-spawn" title="Spawn evacuating victim near camera">
+                    <span class="btn-icon">👤</span> Spawn Victim
+                </button>
+                <button id="btnVRRunEvacuation" class="sim-btn btn-evacuate" title="Calculate safest evacuation route & begin evacuation">
+                    <span class="btn-icon">🚀</span> Start Evacuation
+                </button>
+                <button id="btnVRWalkRoute" class="sim-btn btn-walk" title="Experience Evacuation Walkthrough from Victim POV (Auto-Tour)">
+                    <span class="btn-icon">🚶</span> Walk Route POV
+                </button>
+                <button id="btnVRTeleportVictim" class="sim-btn btn-spawn" title="Teleport camera to victim POV">
+                    <span class="btn-icon">👤</span> To Victim
+                </button>
+                <button id="btnVRTeleportExit" class="sim-btn btn-evacuate" title="Teleport camera to primary exit">
+                    <span class="btn-icon">🚪</span> To Exit
+                </button>
+                <button id="btnVRFlashlight" class="sim-btn btn-flashlight active" title="Toggle Emergency Flashlight (F)">
+                    <span class="btn-icon">🔦</span> Flashlight: ON
+                </button>
+                <button id="btnVRStereo" class="sim-btn btn-stereo" title="Toggle VR Headset Dual-Lens Goggles (V)">
+                    <span class="btn-icon">🥽</span> Headset Lenses: OFF
+                </button>
+                <button id="btnEnterWebXR" class="sim-btn btn-webxr" title="Launch WebXR Session on connected VR Headset">
+                    <span class="btn-icon">🎮</span> WebXR VR
+                </button>
+            </div>
+        </div>
+
+        <div class="viewport-wrapper vr-viewport-wrapper">
+            <div id="vrContainer" class="three-d-container vr-canvas-container"></div>
+            
+            <!-- Dynamic Emergency Hazard Red Alert Vignette -->
+            <div id="vrHazardAlert" class="vr-hazard-vignette"></div>
+
+            <!-- Single Crosshair -->
+            <div id="vrCrosshair" class="vr-crosshair"></div>
+
+            <!-- Dual Crosshair for Stereoscopic Mode -->
+            <div id="vrStereoCrosshairs" class="vr-stereo-crosshairs" style="display: none;">
+                <div class="vr-stereo-crosshair-half">
+                    <div class="vr-crosshair-eye"></div>
+                </div>
+                <div class="vr-stereo-crosshair-half">
+                    <div class="vr-crosshair-eye"></div>
+                </div>
+            </div>
+
+            <!-- Realistic VR Headset Dual-Lens Goggles Mask Overlay -->
+            <div id="vrHeadsetGogglesMask" class="vr-headset-mask" style="display: none;">
+                <div class="vr-eye-half left-eye-half">
+                    <div class="vr-lens left-lens">
+                        <div class="vr-lens-reflection"></div>
+                        <div class="vr-lens-reticle"></div>
+                        <span class="vr-lens-eye-tag">LEFT EYE • 64mm IPD</span>
+                    </div>
+                </div>
+                <div class="vr-nose-bridge"></div>
+                <div class="vr-eye-half right-eye-half">
+                    <div class="vr-lens right-lens">
+                        <div class="vr-lens-reflection"></div>
+                        <div class="vr-lens-reticle"></div>
+                        <span class="vr-lens-eye-tag">RIGHT EYE • 64mm IPD</span>
+                    </div>
+                </div>
+                <div class="vr-headset-top-badge">
+                    <span>🥽 VR HEADSET PREVIEW MODE</span>
+                    <span>• 90 FPS • 6DoF TRACKING ACTIVE • BATTERY 94% 🔋</span>
+                </div>
+            </div>
+
+            <!-- Interactive VR Staircase Navigation HUD Prompt -->
+            <div id="vrStairPrompt" class="vr-stair-prompt" style="display: none;">
+                <div class="vr-stair-card">
+                    <div class="vr-stair-icon-wrap">
+                        <span class="vr-stair-beacon-ring"></span>
+                        <span class="vr-stair-icon">🪜</span>
+                    </div>
+                    <div class="vr-stair-body">
+                        <div class="vr-stair-title">STAIRCASE REACHED</div>
+                        <div id="vrStairCurrentFloorText" class="vr-stair-sub">Current: Ground Floor</div>
+                    </div>
+                    <div class="vr-stair-actions">
+                        <button id="btnVRStairUp" class="vr-stair-btn btn-up" title="Ascend to upper floor (E / PageUp / ▲)">
+                            <span class="btn-stair-icon">▲</span>
+                            <div class="btn-stair-text">
+                                <span class="btn-stair-main">GO UP</span>
+                                <span id="vrStairUpFloorLabel" class="btn-stair-floor">Floor 1</span>
+                            </div>
+                            <kbd class="stair-key">E / ▲</kbd>
+                        </button>
+                        <button id="btnVRStairDown" class="vr-stair-btn btn-down" title="Descend to lower floor (Q / PageDown / ▼)">
+                            <span class="btn-stair-icon">▼</span>
+                            <div class="btn-stair-text">
+                                <span class="btn-stair-main">GO DOWN</span>
+                                <span id="vrStairDownFloorLabel" class="btn-stair-floor">Ground</span>
+                            </div>
+                            <kbd class="stair-key">Q / ▼</kbd>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pointer Lock Prompt Overlay -->
+            <div id="vrPointerLockPrompt" class="vr-overlay-prompt">
+                <div class="prompt-card">
+                    <div class="prompt-icon">🎮</div>
+                    <h3>CLICK TO ENTER FIRST-PERSON VR VIEW</h3>
+                    <p class="prompt-desc">Step into the emergency scenario at human eye level</p>
+                    <div class="prompt-keys">
+                        <span class="key-badge">W A S D</span> Walk
+                        <span class="key-badge">SHIFT</span> Sprint
+                        <span class="key-badge">MOUSE</span> Look 360°
+                        <span class="key-badge">E / Q</span> Stairs
+                        <span class="key-badge">F</span> Flashlight
+                        <span class="key-badge">V</span> Dual-Eye VR
+                        <span class="key-badge">ESC</span> Release Mouse
+                    </div>
+                </div>
+            </div>
+
+            <!-- VR Tactical Evacuation Minimap Radar -->
+            <div id="vrMinimapContainer" class="vr-minimap-container">
+                <div class="vr-minimap-header">
+                    <div class="vr-minimap-title">
+                        <span class="vr-minimap-pulse"></span>
+                        <span class="vr-minimap-label">EVAC RADAR</span>
+                        <span id="vrMinimapFloorBadge" class="vr-minimap-floor">GF</span>
+                    </div>
+                    <div class="vr-minimap-controls">
+                        <button id="btnVRMinimapZoomIn" class="vr-mini-btn" title="Zoom In">+</button>
+                        <button id="btnVRMinimapZoomOut" class="vr-mini-btn" title="Zoom Out">-</button>
+                        <button id="btnVRMinimapToggleMode" class="vr-mini-btn" title="Toggle Follow Player / Entire Floor">🎯</button>
+                    </div>
+                </div>
+                <div class="vr-minimap-canvas-wrap">
+                    <canvas id="vrMinimapCanvas" width="250" height="220"></canvas>
+                    <div id="vrMinimapDistBadge" class="vr-minimap-dist-badge">
+                        <span class="dist-icon">🏃</span>
+                        <span id="vrMinimapDistVal">-- m to Exit</span>
+                    </div>
+                </div>
+                <div class="vr-minimap-footer">
+                    <div class="vr-minimap-legend">
+                        <span class="legend-item"><span class="legend-dot green"></span>Route</span>
+                        <span class="legend-item"><span class="legend-dot cyan"></span>You</span>
+                        <span class="legend-item"><span class="legend-dot red"></span>Fire</span>
+                        <span class="legend-item"><span class="legend-dot exit"></span>Exit</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In-Viewport Emergency HUD Bar -->
+            <div class="vr-hud-overlay">
+                <div class="vr-hud-card">
+                    <span class="vr-hud-label">PROXIMITY HAZARD</span>
+                    <span id="vrHazardStatus" class="vr-hud-value status-normal">NORMAL (PATH CLEAR)</span>
+                </div>
+                <div class="vr-hud-card">
+                    <span class="vr-hud-label">NEAREST EXIT</span>
+                    <span id="vrExitDist" class="vr-hud-value">-- m</span>
+                </div>
+                <div class="vr-hud-card">
+                    <span class="vr-hud-label">COMPASS BEARING</span>
+                    <span id="vrCompass" class="vr-hud-value">N 0°</span>
+                </div>
+                <div class="vr-hud-card">
+                    <span class="vr-hud-label">HEART RATE</span>
+                    <span id="vrBpm" class="vr-hud-value pulse-bpm">72 BPM</span>
+                </div>
+                <div class="vr-hud-card">
+                    <span class="vr-hud-label">HEAT SENSOR</span>
+                    <span id="vrTemp" class="vr-hud-value">24.5 °C</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================= AR FULLSCREEN TACTICAL PAGE ================= -->
+    <div id="pageARView" class="page-ar-view" style="display: none;">
+        <div class="simulation-toolbar ar-toolbar">
+            <div class="simulation-header">
+                <h2>📱 AR TACTICAL DIGITAL TWIN & RESCUE VISOR</h2>
+                <span id="arCameraStatus" class="simulation-subtitle">LIVE CAMERA FEED ACTIVE</span>
+            </div>
+
+            <div class="simulation-controls ar-controls">
+                <div class="ar-mode-toggle">
+                    <button id="btnARModeTabletop" class="ar-toggle-btn active">
+                        <span>🛰️</span> Tabletop Hologram
+                    </button>
+                    <button id="btnARModeVisor" class="ar-toggle-btn">
+                        <span>🪖</span> Smart Visor HUD
+                    </button>
+                </div>
+
+                <button id="btnARCameraSource" class="sim-btn btn-ar-sub" title="Switch between Simulated Command Desk and Webcam">
+                    <span>💻</span> Source: Simulated Desk
+                </button>
+
+                <div id="arTabletopControls" class="ar-tabletop-controls">
+                    <div class="ar-floor-select-wrap">
+                        <label for="arFloorSelect">Floor:</label>
+                        <select id="arFloorSelect" class="sim-select">
+                            <option value="all">All Floors (Tower)</option>
+                            <option value="0">Ground Floor</option>
+                            <option value="1">1st Floor</option>
+                            <option value="2">2nd Floor</option>
+                            <option value="3">3rd Floor</option>
+                            <option value="4">4th Floor</option>
+                            <option value="5">5th Floor</option>
+                            <option value="6">6th Floor</option>
+                            <option value="7">7th Floor</option>
+                        </select>
+                    </div>
+                    <div class="ar-slider-wrap">
+                        <label for="arScaleSlider">Scale:</label>
+                        <input type="range" id="arScaleSlider" min="0.08" max="0.6" step="0.02" value="0.25">
+                    </div>
+                    <button id="btnARAutoRotate" class="sim-btn btn-ar-sub active">
+                        <span>🔄</span> Auto Orbit: ON
+                    </button>
+                </div>
+
+                <button id="btnARThermal" class="sim-btn btn-thermal">
+                    <span>🌡️</span> FLIR Thermal: OFF
+                </button>
+                <button id="btnEnterWebXRAR" class="sim-btn btn-webxr-ar">
+                    <span>📱</span> WebXR AR
+                </button>
+            </div>
+        </div>
+
+        <div class="viewport-wrapper ar-viewport-wrapper">
+            <!-- Intuitive AR Explainer Banner -->
+            <div id="arGuideBanner" class="ar-guide-banner">
+                <div class="ar-guide-step">
+                    <span class="ar-guide-badge">🛰️ 1. TABLETOP MODE</span>
+                    <span>Holographic 3D model on desk. <strong>Drag with mouse</strong> to rotate • <strong>Scroll</strong> to zoom • Switch floors above</span>
+                </div>
+                <div class="ar-guide-step">
+                    <span class="ar-guide-badge" style="background: rgba(16, 185, 129, 0.2); color: #34d399; border-color: rgba(16, 185, 129, 0.5);">🪖 2. SMART VISOR</span>
+                    <span>First-person rescue glasses. Look around in real time with green escape corridor guidance to nearest exit</span>
+                </div>
+            </div>
+
+            <div id="arContainer" class="three-d-container ar-container"></div>
+
+            <!-- AR Smart Visor Heads-Up Display Overlay -->
+            <div id="arVisorHUD" class="ar-visor-hud" style="display: none;">
+                <!-- Top AR Compass Tape -->
+                <div class="ar-compass-ribbon">
+                    <div class="ar-compass-ticker">◀ NW • • • [ N 000° ] • • • NE • • • E 090° • • • SE • • • S 180° ▶</div>
+                </div>
+
+                <div class="ar-reticle-center">
+                    <div class="ar-reticle-circle"></div>
+                    <div class="ar-reticle-corner top-left"></div>
+                    <div class="ar-reticle-corner top-right"></div>
+                    <div class="ar-reticle-corner btm-left"></div>
+                    <div class="ar-reticle-corner btm-right"></div>
+                    <div class="ar-range-tag">TARGET: ESCAPE CORRIDOR A • 14.8m</div>
+                </div>
+
+                <!-- Dynamic In-World Hazard Box Simulation -->
+                <div id="arHazardOverlayBox" class="ar-hazard-box">
+                    <div class="ar-hazard-corner top-l"></div>
+                    <div class="ar-hazard-corner top-r"></div>
+                    <div class="ar-hazard-corner btm-l"></div>
+                    <div class="ar-hazard-corner btm-r"></div>
+                    <div class="ar-hazard-warning">🔥 HAZARD DETECTED: 185°C | 8.4m</div>
+                </div>
+
+                <div class="ar-visor-telemetry">
+                    <div class="ar-telemetry-badge">
+                        <span class="ar-tel-label">AIR TOXICITY (CO2)</span>
+                        <span id="arPPM" class="ar-tel-val">412 PPM</span>
+                    </div>
+                    <div class="ar-telemetry-badge">
+                        <span class="ar-tel-label">AMBIENT FLIR TEMP</span>
+                        <span id="arTemp" class="ar-tel-val">27.2 °C</span>
+                    </div>
+                    <div class="ar-telemetry-badge">
+                        <span class="ar-tel-label">AI SAFE CONFIDENCE</span>
+                        <span id="arConfidence" class="ar-tel-val status-safe">98.7% SAFE</span>
+                    </div>
+                </div>
+
+                <div class="ar-spatial-radar">
+                    <div class="radar-sweep"></div>
+                    <div class="radar-blip exit-blip"></div>
+                    <div class="radar-label">EXIT (N)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- ================= USER SIMULATION HISTORY & REPORTS PAGE ================= -->
+    <div id="pageHistoryView" class="page-history-view" style="display: none;">
+        <div class="history-toolbar">
+            <div class="history-header">
+                <h2>📜 USER EVACUATION & SIMULATION HISTORY</h2>
+                <span class="history-subtitle">Official Drill Audits, Telemetry Records & Compliance Reports</span>
+            </div>
+
+            <div class="history-actions">
+                <div class="hist-search-wrap">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" id="histSearchInput" class="hist-search-input" placeholder="Search operator, floor, status..." />
+                </div>
+                <select id="histFloorFilter" class="hist-filter-select">
+                    <option value="all">🌐 All Floors</option>
+                    <option value="Ground Floor">Ground Floor</option>
+                    <option value="1st Floor">1st Floor</option>
+                    <option value="2nd Floor">2nd Floor</option>
+                    <option value="3rd Floor">3rd Floor</option>
+                    <option value="4th Floor">4th Floor</option>
+                    <option value="5th Floor">5th Floor</option>
+                    <option value="6th Floor">6th Floor</option>
+                    <option value="7th Floor">7th Floor</option>
+                </select>
+                <button id="btnHistExportCSV" class="hist-btn btn-export" title="Download official RFC-4180 CSV compliance audit">
+                    <span>📥</span> Export CSV
+                </button>
+                <button id="btnHistRefresh" class="hist-btn btn-refresh" title="Reload history">
+                    <span>🔄</span> Refresh
+                </button>
+                <button id="btnHistClear" class="hist-btn btn-clear" title="Clear recorded audit runs">
+                    <span>🗑️</span> Clear
+                </button>
+            </div>
+        </div>
+
+        <!-- Analytics Summary Row -->
+        <div class="history-stats-row">
+            <div class="hist-stat-card">
+                <span class="stat-icon">🎮</span>
+                <div class="stat-data">
+                    <span class="stat-label">Total Drills Conducted</span>
+                    <strong id="histStatTotal" class="stat-value">0</strong>
+                </div>
+            </div>
+            <div class="hist-stat-card">
+                <span class="stat-icon">⏱️</span>
+                <div class="stat-data">
+                    <span class="stat-label">Avg Evacuation Time</span>
+                    <strong id="histStatAvgTime" class="stat-value">0.0s</strong>
+                </div>
+            </div>
+            <div class="hist-stat-card">
+                <span class="stat-icon">🛡️</span>
+                <div class="stat-data">
+                    <span class="stat-label">Victims Saved</span>
+                    <strong id="histStatSaved" class="stat-value">0</strong>
+                </div>
+            </div>
+            <div class="hist-stat-card">
+                <span class="stat-icon">📈</span>
+                <div class="stat-data">
+                    <span class="stat-label">Safe Exit Success Rate</span>
+                    <strong id="histStatSuccess" class="stat-value">100%</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="history-table-container">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Drill ID</th>
+                        <th>Operator / User</th>
+                        <th>Date & Time</th>
+                        <th>Floor & Zone</th>
+                        <th>Algorithm</th>
+                        <th>Duration</th>
+                        <th>Distance</th>
+                        <th>Victims</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody">
+                    <!-- Populated dynamically -->
+                </tbody>
+            </table>
+            <div id="historyEmptyState" class="history-empty" style="display: none;">
+                <span class="empty-icon">📂</span>
+                <h4>No Simulation Drills Recorded Yet</h4>
+                <p>Switch to the <strong>3D Simulation</strong> tab, spawn a victim, and click <strong>Start Evacuation</strong> to record your first run!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drill Details Modal -->
+    <div id="historyRunModal" class="auth-modal-overlay" style="display: none;">
+        <div class="auth-modal-card history-detail-modal-card">
+            <div class="auth-modal-header">
+                <div class="auth-brand">
+                    <span class="brand-icon">📋</span>
+                    <div>
+                        <h3 id="histDetailTitle">DRILL AUDIT SUMMARY</h3>
+                        <p id="histDetailSubtitle">Evacuation Telemetry Breakdown</p>
+                    </div>
+                </div>
+                <button id="closeHistDetailModal" class="auth-close-btn">&times;</button>
+            </div>
+            <div id="histDetailContent" class="hist-detail-content"></div>
+        </div>
+    </div>
+
+    <!-- ================= AUTH MODAL (LOGIN & SIGNIN / REGISTER) ================= -->
+    <div id="authModal" class="auth-modal-overlay" style="display: none;">
+        <div class="auth-modal-card">
+            <div class="auth-modal-header">
+                <div class="auth-brand">
+                    <span class="brand-icon">🛡️</span>
+                    <div>
+                        <h3>OPERATOR ACCESS</h3>
+                        <p>AI Fire Evacuation Control Room</p>
+                    </div>
+                </div>
+                <button id="closeAuthModal" class="auth-close-btn" title="Close modal" type="button">&times;</button>
+            </div>
+
+            <div class="auth-tabs">
+                <button id="tabLogin" class="auth-tab-btn active" type="button">
+                    <span>🔑 Sign In</span>
+                </button>
+                <button id="tabRegister" class="auth-tab-btn" type="button">
+                    <span>📝 Register</span>
+                </button>
+            </div>
+
+            <!-- Sign In (Login) Form -->
+            <form id="loginForm" class="auth-form-panel">
+                <div class="auth-field">
+                    <label for="loginEmail">Email Address</label>
+                    <input type="email" id="loginEmail" placeholder="operator@fire-sim.local" required autocomplete="username" />
+                </div>
+                <div class="auth-field">
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required autocomplete="current-password" />
+                </div>
+                <div id="loginError" class="auth-error-msg" style="display: none;"></div>
+                <button type="submit" id="btnLoginSubmit" class="auth-submit-btn">
+                    <span>Sign In to System</span>
+                </button>
+                <div class="auth-hint">
+                    Demo account: <code>operator@fire-sim.local</code> / <code>operator123</code>
+                </div>
+            </form>
+
+            <!-- Register Form -->
+            <form id="registerForm" class="auth-form-panel" style="display: none;">
+                <div class="auth-field">
+                    <label for="regName">Full Name / Operator Name</label>
+                    <input type="text" id="regName" placeholder="Capt. John Doe" required autocomplete="name" />
+                </div>
+                <div class="auth-field">
+                    <label for="regEmail">Email Address</label>
+                    <input type="email" id="regEmail" placeholder="john.doe@emergency.org" required autocomplete="email" />
+                </div>
+                <div class="auth-field">
+                    <label for="regPassword">Password (min 6 chars)</label>
+                    <input type="password" id="regPassword" placeholder="••••••••" required minlength="6" autocomplete="new-password" />
+                </div>
+                <div class="auth-field">
+                    <label for="regRole">Access Role</label>
+                    <select id="regRole" class="auth-select">
+                        <option value="user">Emergency Operator</option>
+                        <option value="admin">System Administrator</option>
+                    </select>
+                </div>
+                <div id="regError" class="auth-error-msg" style="display: none;"></div>
+                <button type="submit" id="btnRegisterSubmit" class="auth-submit-btn register">
+                    <span>Create & Sign In</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer class="status-bar" id="appStatusBar">
+        <div class="status-indicator-wrap">
+            <span class="status-dot"></span>
+            <span id="systemStatusText" class="status-text">2D Blueprint Ready</span>
+            <span id="modeLabel" class="status-mode-pill">2D</span>
+        </div>
+
+        <div class="status-item">
+            <span class="status-lbl">API:</span>
+            <span id="apiStatus" class="status-val">Waiting for connection</span>
+        </div>
+
+        <div class="status-item">
+            <span class="status-lbl">Offline Cache:</span>
+            <span id="cacheStatus" class="status-val">Ready</span>
+        </div>
+    </footer>
+
+
+
+    <!-- ================= RENDERER ================= -->
+    <script src="../../node_modules/three/build/three.min.js"></script>
+    <script src="js/OrbitControlsAdapter.js"></script>
+    <script src="../models/buildingData.js"></script>
+    <script src="../ai/victimAgent.js"></script>
+    <script src="../ai/mlBridge.js"></script>
+    <script src="../ai/pathfinding.js"></script>
+    <script src="js/ThreeDViewer.js"></script>
+    <script src="js/VRViewer.js"></script>
+    <script src="js/ARViewer.js"></script>
+    <script src="js/FireAlarmSystem.js"></script>
+    <script src="js/renderer.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+{
+  "name": "ai-fire-evacuation-desktop",
+  "version": "1.0.0",
+  "description": "Desktop control room application for an AI-based fire evacuation system",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^43.4.0"
+  },
+  "dependencies": {
+    "sharp": "^0.35.3",
+    "tesseract.js": "^7.0.0",
+    "three": "^0.160.0"
+  }
+}

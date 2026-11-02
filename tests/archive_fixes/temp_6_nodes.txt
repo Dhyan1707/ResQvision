@@ -1,0 +1,37 @@
+﻿        columns: [
+          // Adding a few placeholder structural columns on the right terrace to match the 3x3 grid
+          { id: " F6_COL_1\, x: 40, z: -20, radius: 0.8 },
+ { id: \F6_COL_2\, x: 75, z: -20, radius: 0.8 },
+ { id: \F6_COL_3\, x: 105, z: -20, radius: 0.8 },
+ { id: \F6_COL_4\, x: 40, z: 0, radius: 0.8 },
+ { id: \F6_COL_5\, x: 75, z: 0, radius: 0.8 },
+ { id: \F6_COL_6\, x: 105, z: 0, radius: 0.8 },
+ { id: \F6_COL_7\, x: 40, z: 20, radius: 0.8 },
+ { id: \F6_COL_8\, x: 75, z: 20, radius: 0.8 },
+ { id: \F6_COL_9\, x: 105, z: 20, radius: 0.8 }
+ ]
+ },
+ nodes: [
+ // BLUE MARKERS - Rooms
+ { id: \F6_C1\, type: \room\, name: \Classroom C1\, x: -75, z: -20 },
+ { id: \F6_C5\, type: \room\, name: \Classroom C5\, x: -47.5, z: -20 },
+ { id: \F6_C2\, type: \room\, name: \Classroom C2\, x: -77.5, z: 12.5 },
+ { id: \F6_C3\, type: \room\, name: \Classroom C3\, x: -77.5, z: 27.5 },
+ { id: \F6_C4\, type: \room\, name: \Classroom C4\, x: -55, z: 20 },
+ { id: \F6_TOILET_CORE\, type: \room\, name: \Toilet/AHU Core\, x: -2.5, z: -16.5 },
+ { id: \F6_LIFT_LOBBY\, type: \room\, name: \Lift Lobby\, x: -1.5, z: 12.5 },
+ { id: \F6_TERRACE\, type: \room\, name: \Open Terrace\, x: 60, z: 0 },
+ 
+ // PURPLE MARKERS - Corridors
+ { id: \F6_CORR_W\, type: \corridor\, name: \West Corridor\, x: -50, z: 0 },
+ { id: \F6_CORR_C\, type: \corridor\, name: \Central Corridor\, x: 0, z: 0 },
+ 
+ // YELLOW MARKERS - Stairs
+ { id: \F6_STAIRS_MAIN_NODE\, type: \staircase\, name: \Main Stairs\, x: -6.5, z: 18 },
+ { id: \F6_STAIRS_WEST_NODE\, type: \staircase\, name: \West Stairs\, x: -45, z: 0 },
+ 
+ // GREEN MARKERS - Exits
+ { id: \F6_EXIT_MAIN\, type: \exit\, name: \Main Egress\, x: -1.5, z: 8 },
+ { id: \F6_EXIT_WEST\, type: \exit\, name: \West Egress\, x: -38, z: 0 }
+ ]
+ },

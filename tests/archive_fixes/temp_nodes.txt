@@ -1,0 +1,40 @@
+        columns: []
+      },
+      nodes: [
+          // BLUE MARKERS - Rooms
+          { id: "F5_LAB2", type: "room", name: "Lab-2", x: -47.5, z: -11.5 },
+          { id: "F5_LAB1", type: "room", name: "Lab-1", x: -75, z: -11.5 },
+          { id: "F5_FAC_ASSO", type: "room", name: "Faculty (Asso)", x: -47.5, z: -26.5 },
+          { id: "F5_LAB6", type: "room", name: "Lab-6", x: -75, z: -26.5 },
+          { id: "F5_LAB5", type: "room", name: "Lab-5", x: -47.5, z: 11.5 },
+          { id: "F5_FAC_ASST", type: "room", name: "Faculty (Asst)", x: -75, z: 11.5 },
+          { id: "F5_LAB4", type: "room", name: "Lab-4", x: -47.5, z: 26.5 },
+          { id: "F5_LAB3", type: "room", name: "Lab-3", x: -75, z: 26.5 },
+          { id: "F5_AHU_N", type: "room", name: "AHU Room", x: -10.5, z: -16.5 },
+          { id: "F5_BOYS", type: "room", name: "Boys Toilet", x: -3, z: -16.5 },
+          { id: "F5_GIRLS", type: "room", name: "Girls Toilet", x: 2.5, z: -16.5 },
+          { id: "F5_HANDICAP", type: "room", name: "Handicap Toilet", x: 7.5, z: -10.5 },
+          { id: "F5_SEMINAR", type: "room", name: "Seminar Hall", x: 37, z: 28 },
+          { id: "F5_FACULTY", type: "room", name: "Faculty Area", x: 47.5, z: -20 },
+          { id: "F5_BAGGAGE", type: "room", name: "Baggage", x: 72.5, z: -20 },
+          { id: "F5_PRI_READ", type: "room", name: "Primary Reading Room", x: 95, z: -20 },
+          { id: "F5_AHU_S", type: "room", name: "AHU Room", x: 72.5, z: 11.5 },
+          { id: "F5_LIBRARIAN", type: "room", name: "Librarian", x: 72.5, z: 26.5 },
+          { id: "F5_BOOK_STORAGE", type: "room", name: "Book Storage", x: 87.5, z: 20 },
+          { id: "F5_SEC_READ", type: "room", name: "Secondary Reading Room", x: 102.5, z: 20 },
+          { id: "F5_LIFT_LOBBY", type: "room", name: "Lift Lobby", x: -1.5, z: 17.5 },
+          // PURPLE MARKERS - Corridors
+          { id: "F5_CORR_W", type: "corridor", name: "West Corridor", x: -50, z: 0 },
+          { id: "F5_CORR_C", type: "corridor", name: "Central Corridor", x: 0, z: 0 },
+          { id: "F5_CORR_E", type: "corridor", name: "East Corridor", x: 50, z: 0 },
+          { id: "F5_CORR_EE", type: "corridor", name: "Far East Corridor", x: 80, z: 0 },
+          // YELLOW MARKERS - Stairs
+          { id: "F5_STAIRS_MAIN_NODE", type: "staircase", name: "Main Stairs", x: -6.5, z: 18 },
+          { id: "F5_STAIRS_WEST_NODE", type: "staircase", name: "West Stairs", x: -45, z: 0 },
+          { id: "F5_STAIRS_EAST_NODE", type: "staircase", name: "East Stairs", x: 65, z: 0 },
+          // GREEN MARKERS - Exits
+          { id: "F5_EXIT_MAIN", type: "exit", name: "Main Egress", x: -1.5, z: 8 },
+          { id: "F5_EXIT_WEST", type: "exit", name: "West Egress", x: -38, z: 0 },
+          { id: "F5_EXIT_EAST", type: "exit", name: "East Egress", x: 58, z: 0 }
+      ]
+    },

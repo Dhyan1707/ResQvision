@@ -1,0 +1,19 @@
+{
+  "name": "ai-fire-evacuation-simulator",
+  "version": "1.0.0",
+  "description": "Desktop-based AI-powered fire evacuation and disaster management system",
+  "main": "scripts/start.js",
+  "scripts": {
+    "start": "node scripts/start.js",
+    "dev": "node scripts/start.js",
+    "start:all": "node scripts/start.js",
+    "start:desktop": "npm --prefix desktop-app start",
+    "start:backend": "npm --prefix backend start",
+    "dev:backend": "npm --prefix backend run dev",
+    "test": "npm --prefix backend test",
+    "test:backend": "npm --prefix backend test",
+    "install:all": "npm install && npm --prefix backend install && npm --prefix desktop-app install"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,55 @@
+
+    <html>
+      <body style="margin: 0; background: white; display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <canvas id="canvas" width="900" height="400"></canvas>
+        <script>
+          const { ipcRenderer } = require('electron');
+          const canvas = document.getElementById('canvas');
+          const ctx = canvas.getContext('2d');
+          
+          const walls = [{"id":"F3_EXT_NORTH","type":"exterior","x1":-90,"z1":-32,"x2":90,"z2":-32,"thickness":0.5},{"id":"F3_EXT_SOUTH","type":"exterior","x1":-90,"z1":32,"x2":90,"z2":32,"thickness":0.5},{"id":"F3_EXT_WEST","type":"exterior","x1":-90,"z1":-32,"x2":-90,"z2":32,"thickness":0.5},{"id":"F3_EXT_EAST","type":"exterior","x1":90,"z1":-32,"x2":90,"z2":32,"thickness":0.5},{"id":"F3_CORR_N","type":"partition","x1":-90,"z1":-5,"x2":90,"z2":-5,"thickness":0.5},{"id":"F3_CORR_S","type":"partition","x1":-90,"z1":5,"x2":90,"z2":5,"thickness":0.5},{"id":"F3_U_DIV_1","type":"partition","x1":-72,"z1":-32,"x2":-72,"z2":-5,"thickness":0.5},{"id":"F3_U_UL1_HORIZ","type":"partition","x1":-90,"z1":-15,"x2":-72,"z2":-15,"thickness":0.5},{"id":"F3_U_DIV_2","type":"partition","x1":-58,"z1":-32,"x2":-58,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_3","type":"partition","x1":-48,"z1":-32,"x2":-48,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_4","type":"partition","x1":-44,"z1":-32,"x2":-44,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_5","type":"partition","x1":-35,"z1":-32,"x2":-35,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_6","type":"partition","x1":-28,"z1":-32,"x2":-28,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_7","type":"partition","x1":-20,"z1":-32,"x2":-20,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_8","type":"partition","x1":-5,"z1":-32,"x2":-5,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_9","type":"partition","x1":10,"z1":-32,"x2":10,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_10","type":"partition","x1":20,"z1":-32,"x2":20,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_11","type":"partition","x1":30,"z1":-32,"x2":30,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_12","type":"partition","x1":45,"z1":-32,"x2":45,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_13","type":"partition","x1":65,"z1":-32,"x2":65,"z2":-5,"thickness":0.5},{"id":"F3_U_DIV_14","type":"partition","x1":75,"z1":-32,"x2":75,"z2":-5,"thickness":0.5},{"id":"F3_D_DIV_1","type":"partition","x1":-75,"z1":5,"x2":-75,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_2","type":"partition","x1":-60,"z1":5,"x2":-60,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_3","type":"partition","x1":-50,"z1":5,"x2":-50,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_4","type":"partition","x1":-35,"z1":5,"x2":-35,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_5","type":"partition","x1":-20,"z1":5,"x2":-20,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_6","type":"partition","x1":-10,"z1":5,"x2":-10,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_7","type":"partition","x1":10,"z1":5,"x2":10,"z2":32,"thickness":0.5},{"id":"F3_CORE_INTERNAL","type":"partition","x1":2,"z1":5,"x2":2,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_8","type":"partition","x1":25,"z1":5,"x2":25,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_9","type":"partition","x1":30,"z1":5,"x2":30,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_10","type":"partition","x1":45,"z1":5,"x2":45,"z2":32,"thickness":0.5},{"id":"F3_D_DIV_11","type":"partition","x1":80,"z1":5,"x2":80,"z2":32,"thickness":0.5}];
+          const stairs = [{"id":"F3_STAIRS_WEST","x":-55,"z":18.5,"width":8,"depth":15},{"id":"F3_STAIRS_MAIN","x":-4,"z":18.5,"width":10,"depth":15},{"id":"F3_STAIRS_EAST","x":85,"z":18.5,"width":8,"depth":15}];
+          const lifts = [{"id":"F3_LIFT_1","x":4,"z":12,"width":3,"depth":4},{"id":"F3_LIFT_2","x":4,"z":18,"width":3,"depth":4},{"id":"F3_LIFT_3","x":8,"z":12,"width":3,"depth":4},{"id":"F3_LIFT_4","x":8,"z":18,"width":3,"depth":4}];
+          
+          const scale = 4.5;
+          const cx = 450;
+          const cz = 200;
+          
+          ctx.fillStyle = 'white';
+          ctx.fillRect(0, 0, 900, 400);
+          
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = 'black';
+          
+          walls.forEach(w => {
+             ctx.beginPath();
+             ctx.moveTo(cx + w.x1 * scale, cz + w.z1 * scale);
+             ctx.lineTo(cx + w.x2 * scale, cz + w.z2 * scale);
+             ctx.stroke();
+          });
+          
+          ctx.fillStyle = 'rgba(0, 0, 255, 0.3)';
+          ctx.strokeStyle = 'blue';
+          stairs.forEach(s => {
+             const x = cx + (s.x - s.width/2) * scale;
+             const z = cz + (s.z - s.depth/2) * scale;
+             ctx.fillRect(x, z, s.width * scale, s.depth * scale);
+             ctx.strokeRect(x, z, s.width * scale, s.depth * scale);
+          });
+          
+          ctx.fillStyle = 'rgba(255, 0, 0, 0.3)';
+          ctx.strokeStyle = 'red';
+          lifts.forEach(l => {
+             const x = cx + (l.x - l.width/2) * scale;
+             const z = cz + (l.z - l.depth/2) * scale;
+             ctx.fillRect(x, z, l.width * scale, l.depth * scale);
+             ctx.strokeRect(x, z, l.width * scale, l.depth * scale);
+          });
+          
+          setTimeout(() => {
+            ipcRenderer.send('capture-ready');
+          }, 500);
+        </script>
+      </body>
+    </html>
+  

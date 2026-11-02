@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment and Secrets
+.env
+.env.local
+backend/.env
+desktop-app/.env
+
+# Build outputs & caches
+dist/
+build/
+*.exe
+*.dmg
+*.zip
+
+# Logs
+logs/*.log
+logs/*.txt
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python
+__pycache__/
+*/__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+ENV/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Scratch temporary artifacts
+scratch/
+
+
+# Duplicate local copy folder
+AI-Fire-Evacuation-Desktop - Copy/
+
