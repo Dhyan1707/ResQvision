@@ -102,7 +102,7 @@ app.use(errorHandler);
 
 // Start Server
 const PORT = envConfig.PORT || 5000;
-if (process.env.NODE_ENV !== 'test') {
+if (process.env.NODE_ENV !== 'test' && !process.env.VERCEL) {
   app.listen(PORT, () => {
     logger.info(`Server running in ${envConfig.NODE_ENV} mode on port ${PORT}`);
   });
